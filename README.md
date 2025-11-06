@@ -14,7 +14,7 @@ As consultas são realizadas através da **BrasilAPI**, que retorna dados como l
 
 ## Corretoras
 
-### **1. /brokers - lista com todos as corretoras**
+### **1. `/brokers` - lista com todos as corretoras**
 Exibe uma lista com Nome, local e CNPJ das corretoras
 http://localhost::1880/brokers
 
