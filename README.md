@@ -18,7 +18,7 @@ As consultas são realizadas através da **BrasilAPI**, que retorna dados como l
 Exibe uma lista com Nome, local e CNPJ das corretoras
 http://localhost::1880/brokers
 
-##CEP
+## CEP
 
 ### **1. `/cep` – Página inicial**
 Exibe um formulário HTML onde o usuário digita um CEP e realiza a busca.
