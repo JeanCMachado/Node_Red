@@ -1,0 +1,371 @@
+[
+    {
+        "id": "29d6d8b64f0b4257",
+        "type": "tab",
+        "label": "Fluxo 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "bd7d28fbe260e5ba",
+        "type": "http in",
+        "z": "29d6d8b64f0b4257",
+        "name": "LocalHost:1880/brokers",
+        "url": "/brokers",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 400,
+        "y": 920,
+        "wires": [
+            [
+                "e3cbe727852b2496"
+            ]
+        ]
+    },
+    {
+        "id": "a190d86cad4a2295",
+        "type": "template",
+        "z": "29d6d8b64f0b4257",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<html>\n<head>\n  <title>Broker Catalog</title>\n  <style>\n    body { font-family: Arial; padding: 20px; }\n    h1 { color: #333; }\n    .item { margin-bottom: 8px; }\n  </style>\n</head>\n<body>\n  <h1>Lista de Corretoras</h1>\n  <div>\n    <ul>\n      {{#payload}}\n        <li class=\"item\">{{.}}</li>\n      {{/payload}}\n    </ul>\n  </div>\n</body>\n</html>\n",
+        "output": "str",
+        "x": 920,
+        "y": 920,
+        "wires": [
+            [
+                "f1d63926065d8071"
+            ]
+        ]
+    },
+    {
+        "id": "f1d63926065d8071",
+        "type": "http response",
+        "z": "29d6d8b64f0b4257",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1070,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "e3cbe727852b2496",
+        "type": "http request",
+        "z": "29d6d8b64f0b4257",
+        "name": "Brokers",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://brasilapi.com.br/api/cvm/corretoras/v1",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 600,
+        "y": 920,
+        "wires": [
+            [
+                "a03dbaec561a3b85"
+            ]
+        ]
+    },
+    {
+        "id": "a03dbaec561a3b85",
+        "type": "function",
+        "z": "29d6d8b64f0b4257",
+        "name": "function 1",
+        "func": "const brokers = msg.payload;\n\nmsg.payload = brokers.map(b => {\n    const nome = b.nome_social || b.name || \"Sem Nome\";\n    const cidade = b.municipio || b.city || \"Sem CIdade\";\n    const cnpj = b.cnpj || \"Sme CNPJ\";\n\n    return `${nome} - ${cidade} / ${cnpj}`;\n});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 920,
+        "wires": [
+            [
+                "a190d86cad4a2295"
+            ]
+        ]
+    },
+    {
+        "id": "94504b043b389363",
+        "type": "inject",
+        "z": "29d6d8b64f0b4257",
+        "name": "Testando a conexão com as APIs",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 430,
+        "y": 540,
+        "wires": [
+            [
+                "a9ddfca930c730ad",
+                "a044590133e60b81"
+            ]
+        ]
+    },
+    {
+        "id": "b710943c75a94347",
+        "type": "debug",
+        "z": "29d6d8b64f0b4257",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "a9ddfca930c730ad",
+        "type": "http request",
+        "z": "29d6d8b64f0b4257",
+        "name": "Brokers",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://brasilapi.com.br/api/cvm/corretoras/v1",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 700,
+        "y": 480,
+        "wires": [
+            [
+                "b710943c75a94347"
+            ]
+        ]
+    },
+    {
+        "id": "a044590133e60b81",
+        "type": "http request",
+        "z": "29d6d8b64f0b4257",
+        "name": " zip code",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://brasilapi.com.br/api/cep/v2/",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 700,
+        "y": 600,
+        "wires": [
+            [
+                "b710943c75a94347"
+            ]
+        ]
+    },
+    {
+        "id": "in_cep",
+        "type": "http in",
+        "z": "29d6d8b64f0b4257",
+        "name": "/cep",
+        "url": "/cep",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 350,
+        "y": 1060,
+        "wires": [
+            [
+                "tpl_form"
+            ]
+        ]
+    },
+    {
+        "id": "tpl_form",
+        "type": "template",
+        "z": "29d6d8b64f0b4257",
+        "name": "formulario",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "html",
+        "syntax": "mustache",
+        "template": "<!doctype html>\n<html><body>\n<h1>Buscar CEP</h1>\n<form action=\"/cep/search\" method=\"get\">\n<input name=\"cep\" placeholder=\"CEP\"/>\n<button>Buscar</button>\n</form>\n</body></html>",
+        "output": "str",
+        "x": 560,
+        "y": 1060,
+        "wires": [
+            [
+                "res_cep"
+            ]
+        ]
+    },
+    {
+        "id": "res_cep",
+        "type": "http response",
+        "z": "29d6d8b64f0b4257",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 750,
+        "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "in_search",
+        "type": "http in",
+        "z": "29d6d8b64f0b4257",
+        "name": "/cep/search",
+        "url": "/cep/search",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 370,
+        "y": 1120,
+        "wires": [
+            [
+                "fn_extract"
+            ]
+        ]
+    },
+    {
+        "id": "in_param",
+        "type": "http in",
+        "z": "29d6d8b64f0b4257",
+        "name": "/cep/:cep",
+        "url": "/cep/:cep",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 360,
+        "y": 1180,
+        "wires": [
+            [
+                "fn_extract"
+            ]
+        ]
+    },
+    {
+        "id": "fn_extract",
+        "type": "function",
+        "z": "29d6d8b64f0b4257",
+        "name": "extrair",
+        "func": "let cep = null;\nif(msg.req && msg.req.params && msg.req.params.cep){ cep = msg.req.params.cep; }\nif(msg.req && msg.req.query && msg.req.query.cep){ cep = msg.req.query.cep; }\nif(cep){ cep = cep.replace(/\\D/g,\"\"); }\nif(!cep || cep.length!==8){\n    msg.error = true;\n    msg.message = \"CEP inválido.\";\n    delete msg.display;\n    return msg;\n}\nmsg.url = \"https://brasilapi.com.br/api/cep/v2/\" + cep;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 1150,
+        "wires": [
+            [
+                "req_api"
+            ]
+        ]
+    },
+    {
+        "id": "req_api",
+        "type": "http request",
+        "z": "29d6d8b64f0b4257",
+        "name": "Zip",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 740,
+        "y": 1150,
+        "wires": [
+            [
+                "fn_process"
+            ]
+        ]
+    },
+    {
+        "id": "fn_process",
+        "type": "function",
+        "z": "29d6d8b64f0b4257",
+        "name": "processar",
+        "func": "if(msg.error){\n    delete msg.display;\n    return msg;\n}\nconst api = msg.payload;\nif(!api || typeof api !== \"object\"){\n    msg.error = true;\n    msg.message = \"Erro API.\";\n    return msg;\n}\nmsg.error = false;\nmsg.display = {\n    cep: api.cep || \"\",\n    street: api.street || api.logradouro || \"\",\n    neighborhood: api.neighborhood || api.bairro || \"\",\n    city: api.city || api.localidade || \"\",\n    state: api.state || api.uf || \"\"\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 900,
+        "y": 1160,
+        "wires": [
+            [
+                "tpl_result"
+            ]
+        ]
+    },
+    {
+        "id": "tpl_result",
+        "type": "template",
+        "z": "29d6d8b64f0b4257",
+        "name": "resposta",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "html",
+        "syntax": "mustache",
+        "template": "<!doctype html>\n<html><body>\n<h1>Resultado do CEP</h1>\n{{#error}}\n<div style='color:red;'>{{message}}</div>\n{{/error}}\n{{#display}}\n<p><b>CEP:</b> {{cep}}</p>\n<p><b>Rua:</b> {{street}}</p>\n<p><b>Bairro:</b> {{neighborhood}}</p>\n<p><b>Cidade/UF:</b> {{city}} / {{state}}</p>\n{{/display}}\n<p><a href=\"/cep\">Voltar</a></p>\n</body></html>",
+        "output": "str",
+        "x": 1060,
+        "y": 1160,
+        "wires": [
+            [
+                "res_final"
+            ]
+        ]
+    },
+    {
+        "id": "res_final",
+        "type": "http response",
+        "z": "29d6d8b64f0b4257",
+        "name": "",
+        "x": 1310,
+        "y": 1160,
+        "wires": []
+    }
+]
